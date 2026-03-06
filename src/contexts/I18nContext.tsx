@@ -120,6 +120,48 @@ const translations: Record<Lang, Record<string, string>> = {
     'status.paid': '已支付',
     'status.completed': '已完成',
     'status.cancelled': '已取消',
+    'status.approved': '已批准',
+    'status.rejected': '已驳回',
+
+    // Payment
+    'pay.title': '支付结账',
+    'pay.total': '应付金额',
+    'pay.currency': '货币',
+    'pay.method': '支付方式',
+    'pay.confirm': '确认支付',
+    'pay.processing': '正在处理支付...',
+    'pay.success': '支付成功！',
+    'pay.failed': '支付失败',
+    'pay.retryHint': '请检查支付信息后重试',
+    'pay.retry': '重试',
+    'pay.close': '关闭',
+    'pay.txId': '交易号',
+    'pay.assignedSlot': '已分配柜位',
+
+    // Approvals extra
+    'approvals.duration': '使用时长',
+    'approvals.dur.1hour': '1小时',
+    'approvals.dur.1day': '1天',
+    'approvals.dur.3days': '3天',
+    'approvals.dur.1week': '1周',
+    'approvals.submitted': '申请已提交',
+    'approvals.autoUnlock': '已批准，柜锁已自动解锁',
+    'approvals.approvedUnlock': '已批准并自动解锁柜位',
+    'approvals.approver': '审批人',
+    'approvals.status.pending': '待审批',
+    'approvals.status.approved': '已批准',
+    'approvals.status.rejected': '已驳回',
+    'approvals.pendingTab': '待审批',
+    'approvals.historyTab': '审批历史',
+    'approvals.noPending': '暂无待审批请求',
+    'approvals.noHistory': '暂无历史记录',
+
+    // Dashboard extra
+    'dashboard.assignedSlots': '我的柜位',
+    'dashboard.lastAccess': '最后访问',
+    'dashboard.quickPurchase': '快捷购买',
+    'dashboard.viewAll': '查看全部',
+    'dashboard.myLogs': '我的操作记录',
 
     // Language
     'lang.label': '语言',
