@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/contexts/I18nContext';
 import { mockApprovals } from '@/data/mock';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { toast } from 'sonner';
 
 const ApprovalsPage = () => {
   const { user } = useAuth();
+  const { t } = useI18n();
   const [approvals, setApprovals] = useState(mockApprovals);
   const [showForm, setShowForm] = useState(false);
   const [itemName, setItemName] = useState('');
@@ -22,12 +24,12 @@ const ApprovalsPage = () => {
 
   const handleApprove = (id: string) => {
     setApprovals(prev => prev.map(a => a.approval_id === id ? { ...a, status: 'approved' as const, approver_id: user.user_id, approver_name: user.username, approval_time: new Date().toISOString() } : a));
-    toast.success('Request approved');
+    toast.success(t('approvals.approved'));
   };
 
   const handleReject = (id: string) => {
     setApprovals(prev => prev.map(a => a.approval_id === id ? { ...a, status: 'rejected' as const, approver_id: user.user_id, approver_name: user.username, approval_time: new Date().toISOString() } : a));
-    toast.error('Request rejected');
+    toast.error(t('approvals.rejected'));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -52,23 +54,23 @@ const ApprovalsPage = () => {
     setItemName('');
     setReason('');
     setShowForm(false);
-    toast.success('Request submitted');
+    toast.success(t('approvals.submit'));
   };
 
   return (
-    <AppLayout title="Approvals">
+    <AppLayout title={t('approvals.title')}>
       {isEmployee && (
         <div className="mb-6">
           {!showForm ? (
-            <Button onClick={() => setShowForm(true)} className="gradient-primary">New Request</Button>
+            <Button onClick={() => setShowForm(true)} className="gradient-primary">{t('approvals.newRequest')}</Button>
           ) : (
             <form onSubmit={handleSubmit} className="bg-card rounded-lg border p-5 max-w-md space-y-4">
-              <h3 className="font-semibold text-foreground">Request Item Access</h3>
-              <Input placeholder="Item name (e.g. Company Seal)" value={itemName} onChange={e => setItemName(e.target.value)} />
-              <Textarea placeholder="Reason for request..." value={reason} onChange={e => setReason(e.target.value)} />
+              <h3 className="font-semibold text-foreground">{t('approvals.requestAccess')}</h3>
+              <Input placeholder={t('approvals.itemName')} value={itemName} onChange={e => setItemName(e.target.value)} />
+              <Textarea placeholder={t('approvals.reason')} value={reason} onChange={e => setReason(e.target.value)} />
               <div className="flex gap-2">
-                <Button type="submit" className="gradient-primary">Submit</Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+                <Button type="submit" className="gradient-primary">{t('approvals.submit')}</Button>
+                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>{t('approvals.cancel')}</Button>
               </div>
             </form>
           )}
@@ -88,7 +90,7 @@ const ApprovalsPage = () => {
             <div className="flex-1">
               <p className="font-medium text-foreground">{a.item_name}</p>
               <p className="text-xs text-muted-foreground">
-                By {a.requester_name} • {a.request_time}
+                {t('approvals.by')} {a.requester_name} • {a.request_time}
                 {a.reason && ` • ${a.reason}`}
               </p>
             </div>
@@ -96,12 +98,12 @@ const ApprovalsPage = () => {
               a.status === 'pending' ? 'bg-warning/10 text-warning' :
               a.status === 'approved' ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
             }`}>
-              {a.status}
+              {t(`status.${a.status === 'approved' ? 'completed' : a.status === 'rejected' ? 'cancelled' : 'pending'}`)}
             </span>
             {isApprover && a.status === 'pending' && (
               <div className="flex gap-2">
-                <Button size="sm" onClick={() => handleApprove(a.approval_id)} className="bg-success hover:bg-success/90 text-success-foreground">Approve</Button>
-                <Button size="sm" variant="destructive" onClick={() => handleReject(a.approval_id)}>Reject</Button>
+                <Button size="sm" onClick={() => handleApprove(a.approval_id)} className="bg-success hover:bg-success/90 text-success-foreground">{t('approvals.approve')}</Button>
+                <Button size="sm" variant="destructive" onClick={() => handleReject(a.approval_id)}>{t('approvals.reject')}</Button>
               </div>
             )}
           </div>
