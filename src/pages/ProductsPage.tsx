@@ -2,18 +2,28 @@ import { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useI18n } from '@/contexts/I18nContext';
 import { mockProducts } from '@/data/mock';
+import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Package, Search } from 'lucide-react';
+import PaymentDialog from '@/components/PaymentDialog';
 
 const ProductsPage = () => {
   const [search, setSearch] = useState('');
   const { t } = useI18n();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [payOpen, setPayOpen] = useState(false);
+
   const filtered = mockProducts.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.customer_name?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handlePurchase = (product: Product) => {
+    setSelectedProduct(product);
+    setPayOpen(true);
+  };
 
   return (
     <AppLayout title={t('products.title')}>
@@ -39,10 +49,11 @@ const ProductsPage = () => {
               <span className="text-lg font-bold font-mono text-foreground">${product.price}</span>
               <span className="text-xs text-muted-foreground">{t('products.stock')}: {product.stock}</span>
             </div>
-            <Button className="w-full mt-4 gradient-primary" size="sm">{t('products.purchase')}</Button>
+            <Button className="w-full mt-4 gradient-primary" size="sm" onClick={() => handlePurchase(product)}>{t('products.purchase')}</Button>
           </div>
         ))}
       </div>
+      <PaymentDialog product={selectedProduct} open={payOpen} onOpenChange={setPayOpen} />
     </AppLayout>
   );
 };
