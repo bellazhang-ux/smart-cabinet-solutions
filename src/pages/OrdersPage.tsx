@@ -1,6 +1,6 @@
 import AppLayout from '@/components/AppLayout';
+import { useI18n } from '@/contexts/I18nContext';
 import { mockOrders } from '@/data/mock';
-import { Badge } from '@/components/ui/badge';
 
 const statusColors: Record<string, string> = {
   pending: 'bg-warning/10 text-warning border-warning/30',
@@ -10,20 +10,22 @@ const statusColors: Record<string, string> = {
 };
 
 const OrdersPage = () => {
+  const { t } = useI18n();
+
   return (
-    <AppLayout title="Orders">
+    <AppLayout title={t('orders.title')}>
       <div className="bg-card rounded-lg border overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-muted/50 border-b">
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Method</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Slot</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.id')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.user')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.product')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.amount')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.method')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.slot')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.status')}</th>
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t('orders.date')}</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -37,7 +39,7 @@ const OrdersPage = () => {
                 <td className="px-4 py-3 font-mono">{order.assigned_slot_id || '—'}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-1 rounded-full border ${statusColors[order.status]}`}>
-                    {order.status}
+                    {t(`status.${order.status}`)}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{order.created_at}</td>

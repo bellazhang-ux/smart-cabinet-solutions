@@ -1,22 +1,25 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/contexts/I18nContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Package, ShoppingCart, CheckSquare, Lock, ScrollText, Users, LogOut, Settings
+  LayoutDashboard, Package, ShoppingCart, CheckSquare, Lock, ScrollText, Users, LogOut,
 } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '@/types';
+import LangSwitcher from '@/components/LangSwitcher';
 
 const navItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, permission: null },
-  { path: '/products', label: 'Products', icon: Package, permission: 'manage_products' },
-  { path: '/orders', label: 'Orders', icon: ShoppingCart, permission: 'purchase_service' },
-  { path: '/approvals', label: 'Approvals', icon: CheckSquare, permission: 'approve_requests' },
-  { path: '/lockers', label: 'Locker Control', icon: Lock, permission: 'lock_control' },
-  { path: '/logs', label: 'Activity Logs', icon: ScrollText, permission: 'view_logs' },
-  { path: '/users', label: 'User Management', icon: Users, permission: 'manage_users' },
+  { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, permission: null },
+  { path: '/products', labelKey: 'nav.products', icon: Package, permission: 'manage_products' },
+  { path: '/orders', labelKey: 'nav.orders', icon: ShoppingCart, permission: 'purchase_service' },
+  { path: '/approvals', labelKey: 'nav.approvals', icon: CheckSquare, permission: 'approve_requests' },
+  { path: '/lockers', labelKey: 'nav.lockers', icon: Lock, permission: 'lock_control' },
+  { path: '/logs', labelKey: 'nav.logs', icon: ScrollText, permission: 'view_logs' },
+  { path: '/users', labelKey: 'nav.users', icon: Users, permission: 'manage_users' },
 ];
 
 const AppSidebar = () => {
   const { user, logout } = useAuth();
+  const { t } = useI18n();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -26,13 +29,9 @@ const AppSidebar = () => {
 
   const visibleItems = navItems.filter(item => {
     if (!item.permission) return true;
-    // Show orders for Users and FrontDesk
     if (item.path === '/orders' && ['User', 'FrontDesk', 'Admin'].includes(user.role)) return true;
-    // Show approvals for Employee too (to submit requests)
     if (item.path === '/approvals' && user.role === 'Employee') return true;
-    // Show lockers for FrontDesk
     if (item.path === '/lockers' && ['FrontDesk', 'Admin'].includes(user.role)) return true;
-    // Show logs for FrontDesk
     if (item.path === '/logs' && ['FrontDesk', 'Admin', 'Approver'].includes(user.role)) return true;
     return permissions.includes(item.permission);
   });
@@ -50,8 +49,8 @@ const AppSidebar = () => {
             <Lock className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-sidebar-foreground font-mono">SmartCabinet</h2>
-            <p className="text-xs text-sidebar-foreground/60">v1.0 Prototype</p>
+            <h2 className="text-sm font-bold text-sidebar-foreground font-mono">{t('app.name')}</h2>
+            <p className="text-xs text-sidebar-foreground/60">{t('nav.prototype')}</p>
           </div>
         </div>
       </div>
@@ -71,13 +70,16 @@ const AppSidebar = () => {
               }`}
             >
               <Icon className="w-4 h-4" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}
       </nav>
 
       <div className="p-3 border-t border-sidebar-border">
+        <div className="px-3 py-2 mb-2">
+          <LangSwitcher />
+        </div>
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center text-xs font-mono text-sidebar-foreground">
             {user.username[0].toUpperCase()}
@@ -92,7 +94,7 @@ const AppSidebar = () => {
           className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors w-full"
         >
           <LogOut className="w-4 h-4" />
-          Sign Out
+          {t('nav.signout')}
         </button>
       </div>
     </aside>
